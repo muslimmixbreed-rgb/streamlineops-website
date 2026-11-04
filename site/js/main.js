@@ -57,7 +57,10 @@
       .then(function (r) {
         return netlifyCopy.then(function () {
           if (r.ok && r.body.token) {
-            try { sessionStorage.setItem('so_analyser_token', r.body.token); } catch (err) { /* private mode */ }
+            try {
+              sessionStorage.setItem('so_analyser_token', r.body.token);
+              sessionStorage.setItem('so_analyser_person', JSON.stringify({ name: payload.name, email: payload.email, business: payload.business }));
+            } catch (err) { /* private mode */ }
             window.location.href = 'analyser/tool.html';
             return;
           }

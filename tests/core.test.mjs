@@ -76,15 +76,16 @@ test('claude call uses the server prompt, fixed model and capped tokens', async 
   const store = memoryStore();
   const id = await begun(store);
   const client = stubClient();
-  const r = await handleClaude({ body: { analysisId: id, promptId: 'framework', user: 'Idea text', maxTokens: 99999 }, store, client });
+  const r = await handleClaude({ body: { analysisId: id, promptId: 'gap-report', user: 'Idea text', maxTokens: 99999 }, store, client });
   assert.equal(r.status, 200);
   assert.equal(r.body.text, 'ok');
   const p = client.calls[0];
   assert.equal(p.model, 'claude-haiku-5-5');
-  assert.equal(p.max_tokens, 2000); // 1000 answer cap + 1000 room for thinking
-  assert.deepEqual(p.output_config, { effort: 'low' });
+  assert.equal(p.max_tokens, 3500); // 1500 answer cap + 2000 room for thinking
+  assert.deepEqual(p.output_config, { effort: 'medium' });
   assert.equal('temperature' in p, false);
   assert.match(p.system, /valid JSON object/);
+  assert.match(p.system, /process, excel, sops, kpis, projects, routines/);
   assert.deepEqual(p.messages, [{ role: 'user', content: 'Idea text' }]);
 });
 
@@ -93,8 +94,8 @@ test('claude call rejects unknown prompts, missing analysis and long input', asy
   const id = await begun(store);
   const client = stubClient();
   assert.equal((await handleClaude({ body: { analysisId: id, promptId: 'anything', user: 'x' }, store, client })).status, 400);
-  assert.equal((await handleClaude({ body: { analysisId: 'nope', promptId: 'summary', user: 'x' }, store, client })).status, 401);
-  assert.equal((await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x'.repeat(9000) }, store, client })).status, 413);
+  assert.equal((await handleClaude({ body: { analysisId: 'nope', promptId: 'gap-report', user: 'x' }, store, client })).status, 401);
+  assert.equal((await handleClaude({ body: { analysisId: id, promptId: 'gap-report', user: 'x'.repeat(9000) }, store, client })).status, 413);
   assert.equal(client.calls.length, 0);
 });
 
@@ -103,18 +104,18 @@ test('an analysis stops after its call budget', async () => {
   const id = await begun(store);
   const client = stubClient();
   let r;
-  for (let i = 0; i < 41; i++) r = await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x' }, store, client });
+  for (let i = 0; i < 6; i++) r = await handleClaude({ body: { analysisId: id, promptId: 'gap-report', user: 'x' }, store, client });
   assert.equal(r.status, 429);
-  assert.equal(client.calls.length, 40);
+  assert.equal(client.calls.length, 5);
 });
 
 test('refusals and API errors become plain messages', async () => {
   const store = memoryStore();
   const id = await begun(store);
-  const refused = await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x' }, store, client: stubClient({ stop_reason: 'refusal', content: [] }) });
+  const refused = await handleClaude({ body: { analysisId: id, promptId: 'gap-report', user: 'x' }, store, client: stubClient({ stop_reason: 'refusal', content: [] }) });
   assert.equal(refused.status, 422);
   const failing = { messages: { create: async () => { throw new Error('socket hang up'); } } };
-  const err = await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x' }, store, client: failing });
+  const err = await handleClaude({ body: { analysisId: id, promptId: 'gap-report', user: 'x' }, store, client: failing });
   assert.equal(err.status, 502);
   assert.ok(!JSON.stringify(err.body).includes('socket'));
   assert.ok(Anthropic.APIError);
@@ -134,9 +135,9 @@ test('answer text is read past thinking blocks, and a cut-off empty answer is an
   const store = memoryStore();
   const id = await begun(store);
   const withThinking = stubClient({ stop_reason: 'end_turn', content: [{ type: 'thinking', thinking: '', signature: 's' }, { type: 'text', text: 'answer' }] });
-  const r = await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x' }, store, client: withThinking });
+  const r = await handleClaude({ body: { analysisId: id, promptId: 'gap-report', user: 'x' }, store, client: withThinking });
   assert.equal(r.body.text, 'answer');
   const cut = stubClient({ stop_reason: 'max_tokens', content: [{ type: 'thinking', thinking: '', signature: 's' }] });
-  const c = await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x' }, store, client: cut });
+  const c = await handleClaude({ body: { analysisId: id, promptId: 'gap-report', user: 'x' }, store, client: cut });
   assert.equal(c.status, 502);
 });

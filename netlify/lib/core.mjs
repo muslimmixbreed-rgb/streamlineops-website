@@ -14,15 +14,15 @@ const num = (name, fallback) => {
 
 export const settings = () => ({
   freeAnalyses: num('FREE_ANALYSES', 2),          // analyses per email address
-  callsPerAnalysis: num('CALLS_PER_ANALYSIS', 40), // a full run uses about 29 calls
-  maxTokensCap: num('MAX_TOKENS_CAP', 1000),       // longest answer the page may ask for
+  callsPerAnalysis: num('CALLS_PER_ANALYSIS', 5),  // one report per analysis, plus a few retries
+  maxTokensCap: num('MAX_TOKENS_CAP', 1500),       // longest answer the page may ask for
   maxInputChars: num('MAX_INPUT_CHARS', 8000),     // longest text the page may send
   dailyCallLimit: num('DAILY_CALL_LIMIT', 600),    // site-wide safety cap on Claude calls per day
   ipDailyAnalyses: num('IP_DAILY_ANALYSES', 6),    // analyses started per visitor IP per day
   sessionHours: num('SESSION_HOURS', 24),
   model: process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5',
-  effort: process.env.ANTHROPIC_EFFORT || 'low',      // how much newer models think before answering
-  thinkingRoom: num('THINKING_ROOM', 1000),           // extra tokens allowed for that thinking
+  effort: process.env.ANTHROPIC_EFFORT || 'medium',      // how much newer models think before answering
+  thinkingRoom: num('THINKING_ROOM', 2000),           // extra tokens allowed for that thinking
 });
 
 // The 4.6 models answer straight away. Newer models (Haiku 5.5, Sonnet 5.5, ...) think first,

@@ -117,8 +117,9 @@ def footer(P):
 <script src="{P}js/main.js"></script>'''
 
 PAGES = []
-def page(path, title, desc, active, body, ogtype="website"):
-    PAGES.append(path)
+def page(path, title, desc, active, body, ogtype="website", scripts=(), noindex=False):
+    if not noindex:
+        PAGES.append(path)
     P = "../" * path.count("/")
     url = SITE + "/" + path.replace("index.html", "")
     html = f'''<!doctype html>
@@ -134,7 +135,7 @@ def page(path, title, desc, active, body, ogtype="website"):
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{url}">
 <meta property="og:site_name" content="StreamlineOps">
-<meta name="theme-color" content="#0a0e14">
+<meta name="theme-color" content="#0a0e14">{"<meta name=\"robots\" content=\"noindex\">" if noindex else ""}
 <link rel="icon" href="{P}img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="{P}fonts/public-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{P}css/style.css">
@@ -144,7 +145,7 @@ def page(path, title, desc, active, body, ogtype="website"):
 <main id="main">
 {textwrap.dedent(body).strip()}
 </main>
-{footer(P)}
+{footer(P)}{"".join(f'<script src="{P}js/{x}"></script>' for x in scripts)}
 </body>
 </html>
 '''
@@ -218,13 +219,13 @@ PROMO = '''<section class="band accent-band">
     <div>
       <p class="kicker">Free tool</p>
       <h2>Find out where your operations are losing time</h2>
-      <p class="lede">The StreamlineOps Business Analyser asks a few questions about how your business runs and highlights the areas most worth a closer look.</p>
+      <p class="lede">The free StreamlineOps Business Analyser scores how your business runs today and shows your three biggest operational gaps, with practical next steps.</p>
       <div class="actions"><a class="button" href="{P}analyser.html">Start the free analysis</a></div>
     </div>
     <ul class="promo-list">
-      <li><span>01</span>Answer questions about how you work</li>
-      <li><span>02</span>See where time and effort are going</li>
-      <li><span>03</span>Two free analyses, no obligation</li>
+      <li><span>01</span>Rate 20 statements about how you work</li>
+      <li><span>02</span>See a score for each area of the business</li>
+      <li><span>03</span>Get your top three gaps and quick wins</li>
     </ul>
   </div>
 </section>'''
@@ -399,9 +400,9 @@ page("about.html", "About | StreamlineOps",
 
 # ------------------------------------------------------------------ ANALYSER
 page("analyser.html", "Business Analyser | StreamlineOps",
-     "A free tool that shows where your business operations could run more smoothly. Two free analyses.",
+     "A free operations health check for small businesses: score your processes, tools, procedures and customer handling, and see your biggest gaps. Two free analyses.",
      "Business Analyser", f'''
-{page_hero("The Business Analyser", "Answer some questions about how your business runs and get a clear view of where things could be smoother. Free to use twice.", "Free tool", "Business Analyser")}
+{page_hero("The Business Analyser", "A free operations health check for businesses that are already trading. Rate 20 statements about how your business runs and get a score for each area, your three biggest gaps and practical next steps. About 5 minutes, free to use twice.", "Free tool", "Business Analyser")}
 <section class="band mist">
   <div class="wrap two-col wide-left">
     <div class="panel tool" id="analyser-gate">
@@ -426,9 +427,10 @@ page("analyser.html", "Business Analyser | StreamlineOps",
     <aside>
       <p class="kicker">What you get</p>
       <ul class="ticks">
-        <li>A quick view of where time and effort are going</li>
-        <li>The areas most worth a closer look</li>
-        <li>Two free analyses, with no sales call attached</li>
+        <li>A score for processes, tools, procedures and customers</li>
+        <li>Your three biggest gaps, with a first step for each</li>
+        <li>Three quick wins you can do this week</li>
+        <li>Two free analyses, with no obligation</li>
       </ul>
       <p class="muted small">Your details are used to provide the analyser. Marketing emails are optional.</p>
     </aside>
@@ -509,6 +511,31 @@ for post in POSTS:
   </div>
 </section>
 ''', "article")
+
+page("analyser/tool.html", "Operations health check | StreamlineOps",
+     "StreamlineOps Business Analyser: operations health check.", "Business Analyser", f'''
+{page_hero("Operations health check", "Answer honestly: the more accurate your answers, the more useful your report. Nothing is shared unless you choose to send it.", "Business Analyser", '<a href="{{P}}analyser.html">Business Analyser</a><span>/</span>Health check')}
+<section class="band mist">
+  <div class="wrap">
+    <div class="panel hc-panel" id="hc-app"><noscript>This tool needs JavaScript switched on.</noscript></div>
+    <form class="panel hc-panel hc-noprint" id="results-form" name="analyser-results" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="analyser-results">
+      <p hidden><label>Leave this empty: <input name="bot-field"></label></p>
+      <input type="hidden" name="name"><input type="hidden" name="email"><input type="hidden" name="business">
+      <input type="hidden" name="profile"><input type="hidden" name="scores"><input type="hidden" name="gaps"><input type="hidden" name="frustration">
+      <p class="kicker">Next step</p>
+      <h2 style="font-size:1.7rem">Want help closing these gaps?</h2>
+      <p class="muted">Send your results to StreamlineOps and request a free, no-obligation chat about what would make the biggest difference.</p>
+      <div class="form">
+        <div><label for="r-phone">Phone number <span class="muted">(optional)</span></label><input id="r-phone" name="phone" type="text" autocomplete="tel"></div>
+        <div><label for="r-msg">Anything you'd like to add? <span class="muted">(optional)</span></label><textarea id="r-msg" name="message"></textarea></div>
+        <div class="check"><input id="r-ok" name="contact_consent" type="checkbox" value="yes" required><label for="r-ok">Please contact me about my results. I agree to StreamlineOps using these details as set out in the <a href="{{P}}privacy.html">privacy policy</a>.</label></div>
+        <div><button class="button dark" type="submit">Send my results and request a chat</button></div>
+      </div>
+    </form>
+  </div>
+</section>
+''', scripts=("analyser-questions.js", "analyser.js"), noindex=True)
 
 page("thanks.html", "Message sent | StreamlineOps", "Thanks for getting in touch.", "",
      page_hero("Thanks, your message is on its way", 'You will get a personal reply. In the meantime, have a look at our <a href="/blog/">insights</a>.', "Message sent"))

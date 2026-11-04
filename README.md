@@ -7,11 +7,12 @@ The StreamlineOps website and the Business Analyser, hosted on Netlify.
 | Path | What it is |
 |---|---|
 | `site/` | The published website (plain HTML, CSS, JS). |
-| `site/analyser/tool.html` | The Business Analyser itself. Edit this file directly to change questions, layout or wording. |
+| `site/js/analyser-questions.js` | The Business Analyser's questions, rating scale and service links. Edit this to change what is asked. |
+| `site/js/analyser.js` | How the analyser works: steps, scoring, report display and the "send my results" form. |
 | `netlify/lib/prompts.mjs` | The instructions given to Claude for each kind of analyser request. |
 | `netlify/lib/core.mjs` | The rules: email sign-up, two free analyses per email, spending caps. |
 | `netlify/functions/` | The three server endpoints: `/api/start`, `/api/begin`, `/api/claude`. |
-| `tools/build.py` | Regenerates the main site pages (not the analyser). Article text is in `tools/content/`. |
+| `tools/build.py` | Regenerates all HTML pages, including `site/analyser/tool.html`. Article text is in `tools/content/`. |
 | `tests/` | Tests for the server rules. Run `npm test` (no API key needed). |
 
 ## How the analyser is protected
@@ -19,11 +20,19 @@ The StreamlineOps website and the Business Analyser, hosted on Netlify.
 The Anthropic API key is **never** in the website code. It is stored in Netlify as an
 environment variable and used only by the server functions.
 
-1. The visitor enters name, email and consent on `/analyser.html` (also saved to Netlify Forms).
+The analyser is an operations health check for existing businesses: a short profile, then
+20 statements across four areas (processes, tools, procedures and measures, customers),
+rated 1-5. Scores are worked out in the browser; Claude writes one report with the three
+biggest gaps, each linked to a StreamlineOps service, plus three quick wins.
+
+1. The visitor enters name, email and consent on `/analyser.html` (also saved to Netlify Forms
+   as `analyser-signup`).
 2. `/api/start` records the sign-up and gives the browser a session code.
-3. Pressing **Begin Analysis** calls `/api/begin`, which uses one of that email's free analyses.
-4. Every AI step calls `/api/claude`, which checks the session, uses a fixed model and a
-   prompt from `prompts.mjs`, caps the answer length and the number of calls, then calls Claude.
+3. Pressing **See my results** calls `/api/begin`, which uses one of that email's free analyses,
+   then `/api/claude` with the `gap-report` prompt from `prompts.mjs`. The server checks the
+   session, uses a fixed model, caps the answer length and the number of calls, then calls Claude.
+4. If the visitor ticks the box and sends their results, they arrive in Netlify Forms as
+   `analyser-results` (name, email, phone, scores and top gaps) so you can follow up.
 
 ## One-time setup in Netlify
 
@@ -41,11 +50,11 @@ environment variable and used only by the server functions.
 | Name | Default | Meaning |
 |---|---|---|
 | `ANTHROPIC_MODEL` | `claude-haiku-5-5` | Model used for every analyser request (e.g. `claude-sonnet-5-5` for stronger, pricier answers). |
-| `ANTHROPIC_EFFORT` | `low` | How much newer models think before answering: `low`, `medium` or `high`. Higher costs more. |
-| `THINKING_ROOM` | `1000` | Extra tokens allowed for that thinking, on top of the answer. |
+| `ANTHROPIC_EFFORT` | `medium` | How much newer models think before answering: `low`, `medium` or `high`. Higher costs more. |
+| `THINKING_ROOM` | `2000` | Extra tokens allowed for that thinking, on top of the answer. |
 | `FREE_ANALYSES` | `2` | Free analyses per email address. |
-| `CALLS_PER_ANALYSIS` | `40` | AI requests allowed within one analysis (a full run uses about 29). |
-| `MAX_TOKENS_CAP` | `1000` | Longest answer any single request can ask for. |
+| `CALLS_PER_ANALYSIS` | `5` | AI requests allowed within one analysis (one report, plus retries). |
+| `MAX_TOKENS_CAP` | `1500` | Longest answer any single request can ask for. |
 | `MAX_INPUT_CHARS` | `8000` | Longest text a visitor can send in one request. |
 | `DAILY_CALL_LIMIT` | `600` | Site-wide cap on AI requests per day. |
 | `IP_DAILY_ANALYSES` | `6` | Analyses that can be started from one internet connection per day. |
@@ -53,8 +62,10 @@ environment variable and used only by the server functions.
 
 ## Changing the analyser
 
-- Changing questions, text or layout: edit `site/analyser/tool.html`.
-- Whenever the page needs Claude, call `callClaude(promptId, text, maxTokens)`, where `promptId`
-  is one of the names in `netlify/lib/prompts.mjs`. To add a new kind of request, add a new
-  entry there first.
-- Don't add `fetch` calls to `api.anthropic.com` in the page, and never put a key in it.
+- Changing questions: edit `site/js/analyser-questions.js` (statements, areas, sectors and
+  which services each area links to). No rebuild needed.
+- Changing what the report says or how it is written: edit the `gap-report` text in
+  `netlify/lib/prompts.mjs`. Keep the JSON shape the same, because `analyser.js` reads it.
+- Changing the page wording around the tool: edit the `analyser/tool.html` section of
+  `tools/build.py`, then run `python3 tools/build.py`.
+- Never call `api.anthropic.com` from the page, and never put a key in any file here.
