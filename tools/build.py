@@ -219,13 +219,13 @@ PROMO = '''<section class="band accent-band">
     <div>
       <p class="kicker">Free tool</p>
       <h2>Find out where your operations are losing time</h2>
-      <p class="lede">The free StreamlineOps Business Analyser scores how your business runs today and shows your three biggest operational gaps, with practical next steps.</p>
+      <p class="lede">The free StreamlineOps Business Analyser scores how your business runs today and shows your three biggest operational gaps and what they are costing you.</p>
       <div class="actions"><a class="button" href="{P}analyser.html">Start the free analysis</a></div>
     </div>
     <ul class="promo-list">
       <li><span>01</span>Rate 20 statements about how you work</li>
       <li><span>02</span>See a score for each area of the business</li>
-      <li><span>03</span>Get your top three gaps and quick wins</li>
+      <li><span>03</span>See your top three gaps and why they matter</li>
     </ul>
   </div>
 </section>'''
@@ -402,7 +402,7 @@ page("about.html", "About | StreamlineOps",
 page("analyser.html", "Business Analyser | StreamlineOps",
      "A free operations health check for small businesses: score your processes, tools, procedures and customer handling, and see your biggest gaps. Two free analyses.",
      "Business Analyser", f'''
-{page_hero("The Business Analyser", "A free operations health check for businesses that are already trading. Rate 20 statements about how your business runs and get a score for each area, your three biggest gaps and practical next steps. About 5 minutes, free to use twice.", "Free tool", "Business Analyser")}
+{page_hero("The Business Analyser", "A free operations health check for businesses that are already trading. Rate 20 statements about how your business runs and get a score for each area plus your three biggest gaps and what they are likely costing you. About 5 minutes, free to use twice.", "Free tool", "Business Analyser")}
 <section class="band mist">
   <div class="wrap two-col wide-left">
     <div class="panel tool" id="analyser-gate">
@@ -428,8 +428,8 @@ page("analyser.html", "Business Analyser | StreamlineOps",
       <p class="kicker">What you get</p>
       <ul class="ticks">
         <li>A score for processes, tools, procedures and customers</li>
-        <li>Your three biggest gaps, with a first step for each</li>
-        <li>Three quick wins you can do this week</li>
+        <li>Your three biggest gaps, and why each one matters</li>
+        <li>What good looks like, and which service fits</li>
         <li>Two free analyses, with no obligation</li>
       </ul>
       <p class="muted small">Your details are used to provide the analyser. Marketing emails are optional.</p>
@@ -524,8 +524,8 @@ page("analyser/tool.html", "Operations health check | StreamlineOps",
       <input type="hidden" name="name"><input type="hidden" name="email"><input type="hidden" name="business">
       <input type="hidden" name="profile"><input type="hidden" name="scores"><input type="hidden" name="gaps"><input type="hidden" name="frustration">
       <p class="kicker">Next step</p>
-      <h2 style="font-size:1.7rem">Want help closing these gaps?</h2>
-      <p class="muted">Send your results to StreamlineOps and request a free, no-obligation chat about what would make the biggest difference.</p>
+      <h2 style="font-size:1.7rem">Want to know how to close these gaps?</h2>
+      <p class="muted">The right fix depends on how your business actually runs. Send your results to StreamlineOps and request a free, no-obligation chat about what would make the biggest difference for you.</p>
       <div class="form">
         <div><label for="r-phone">Phone number <span class="muted">(optional)</span></label><input id="r-phone" name="phone" type="text" autocomplete="tel"></div>
         <div><label for="r-msg">Anything you'd like to add? <span class="muted">(optional)</span></label><textarea id="r-msg" name="message"></textarea></div>

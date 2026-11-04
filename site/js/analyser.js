@@ -227,19 +227,18 @@
     var gaps = report.gaps.slice(0, 3);
     box.append(el('ol', { class: 'hc-gaps' }, gaps.map(function (g) {
       var svc = SERVICES[g.service];
+      var row = function (label, text) { return text ? el('p', {}, [el('b', { text: label + ' ' }), String(text)]) : null; };
       return el('li', {}, [
         el('span', { class: 'tag', text: String(g.area || '') }),
         el('h4', { text: String(g.title || '') }),
-        el('p', { text: String(g.why || '') }),
-        el('p', {}, [el('b', { text: 'First step: ' }), String(g.first_step || '')]),
+        row('What we found:', g.what),
+        row('Why it matters:', g.why),
+        row('What good looks like:', g.good),
         svc ? el('p', { class: 'hc-svc' }, ['How StreamlineOps can help: ', el('a', { href: '../services.html#' + svc.anchor, text: svc.name })]) : null
       ]);
     })));
 
-    if (Array.isArray(report.quick_wins) && report.quick_wins.length) {
-      box.append(el('h3', { text: 'Quick wins for this week' }), el('ul', { class: 'ticks' }, report.quick_wins.slice(0, 3).map(function (w) { return el('li', { text: String(w) }); })));
-    }
-    box.append(el('p', { class: 'small muted', text: 'This report was written by AI from your own answers. Treat it as a starting point for a conversation, not professional advice.' }));
+    box.append(el('p', { class: 'small muted', text: 'This report was written by AI from your own answers. It shows where the gaps are, not how to close them: the right fix depends on how your business works, which is what a conversation is for.' }));
     box.append(el('div', { class: 'actions hc-noprint' }, [el('button', { type: 'button', class: 'button dark', text: 'Save as PDF', onclick: function () { window.print(); } })]));
     if (typeof state.usesLeft === 'number') box.append(el('p', { class: 'small muted hc-noprint', text: state.usesLeft === 1 ? 'You have 1 free analysis left.' : state.usesLeft === 0 ? 'That was your last free analysis.' : '' }));
 

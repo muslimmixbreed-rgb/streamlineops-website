@@ -23,7 +23,9 @@ environment variable and used only by the server functions.
 The analyser is an operations health check for existing businesses: a short profile, then
 20 statements across four areas (processes, tools, procedures and measures, customers),
 rated 1-5. Scores are worked out in the browser; Claude writes one report with the three
-biggest gaps, each linked to a StreamlineOps service, plus three quick wins.
+biggest gaps, each linked to a StreamlineOps service. For each gap the report says what was
+found, why it matters and what good looks like, but deliberately not how to fix it: that is
+the paid work. The prompt in `prompts.mjs` tells Claude never to give steps or methods.
 
 1. The visitor enters name, email and consent on `/analyser.html` (also saved to Netlify Forms
    as `analyser-signup`).

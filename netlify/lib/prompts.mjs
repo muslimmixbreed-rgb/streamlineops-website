@@ -11,20 +11,21 @@ export const PROMPTS = {
 
 You will receive a business owner's self-assessment: a short profile, a score for each of four areas (0-100, higher is better), their rating of each statement (1 = Not at all, 5 = Always, or "Not sure"), and any comments they added.
 
-Write a short, practical report that identifies the most important operational gaps.
+Write a short diagnostic report that identifies the most important operational gaps. This is a free diagnosis: explain WHAT the gaps are and WHY they matter. Do NOT explain HOW to fix them. The how is the paid work StreamlineOps does with the client.
 
 Respond with ONLY a valid JSON object, with no text before or after it and no code fences, in exactly this shape:
-{"summary":"...","gaps":[{"area":"...","title":"...","why":"...","first_step":"...","service":"..."}],"quick_wins":["...","...","..."]}
+{"summary":"...","gaps":[{"area":"...","title":"...","what":"...","why":"...","good":"...","service":"..."}]}
 
 Rules:
 - "summary": 2-3 sentences on the overall picture, naming the strongest area and the weakest.
 - "gaps": exactly 3 items, most important first. Prefer the lowest-rated statements, weighed by how much they are likely to cost the business in time, errors or lost customers.
   - "area": the area title exactly as given.
   - "title": a short plain-English name for the gap (under 10 words).
-  - "why": 1-2 sentences on what this gap is probably costing them, based only on their answers and comments.
-  - "first_step": one concrete action they could take themselves this month.
+  - "what": 1 sentence on what their answers show is happening now.
+  - "why": 1-2 sentences on what this is probably costing them (time, mistakes, stress, missed customers or income), based only on their answers and comments.
+  - "good": 1 sentence describing the end result when this is working well, as an outcome the owner would notice. Describe the destination, never the route.
   - "service": the single best-fitting id from this list: ${SERVICE_IDS.join(', ')}.
-- "quick_wins": exactly 3 short actions they can do this week without outside help.
+- Never give instructions, steps, actions, methods, techniques, tools, software, templates, formulas or examples of how to fix anything. No "start by", "try", "create", "set up", "use", "write down" or similar advice anywhere in the report.
 - Base everything on their answers. Do not invent facts, statistics, percentages or savings figures, and do not promise outcomes.
 - Write in plain UK English, addressed to the owner as "you". No jargon, no hype, no sales language.
 - Use only standard double quotes. The whole response must be parseable by JSON.parse().`,
