@@ -168,11 +168,11 @@ def page_hero(title, lede, kicker, crumb=None):
 # ------------------------------------------------------------------ shared content
 POSTS = [
     ("blog/signs-your-processes-need-streamlining.html", "7 signs your business processes need streamlining",
-     "Operations", "Seven everyday warning signs that your processes are costing you time, and a practical first step for each.", art_signs),
-    ("blog/excel-job-tracker.html", "Build a simple job tracker in Excel in an afternoon",
-     "Excel & tools", "A one-sheet tracker that shows every job, who owns it and what is running late.", art_excel),
-    ("blog/write-an-sop-people-use.html", "How to write an SOP your team will actually use",
-     "Procedures", "Procedures that sit unread in a folder help nobody. A one-page format that gets used.", art_sop),
+     "Operations", "Seven everyday warning signs that your processes are costing you time, and what each one is really costing you.", art_signs),
+    ("blog/spreadsheet-warning-signs.html", "5 signs your spreadsheets are holding your business back",
+     "Excel & tools", "The spreadsheet that worked at ten customers can become a liability at a hundred. How to tell if yours has.", art_excel),
+    ("blog/why-your-team-keeps-asking.html", "Why your team keeps asking the same questions",
+     "Procedures", "When know-how lives in people's heads, it quietly slows the whole business down. The signs, and why it matters.", art_sop),
 ]
 
 def tile(post, P="{P}"):
