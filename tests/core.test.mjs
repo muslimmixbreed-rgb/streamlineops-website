@@ -80,8 +80,10 @@ test('claude call uses the server prompt, fixed model and capped tokens', async 
   assert.equal(r.status, 200);
   assert.equal(r.body.text, 'ok');
   const p = client.calls[0];
-  assert.equal(p.model, 'claude-sonnet-4-6');
-  assert.equal(p.max_tokens, 1000);
+  assert.equal(p.model, 'claude-haiku-5-5');
+  assert.equal(p.max_tokens, 2000); // 1000 answer cap + 1000 room for thinking
+  assert.deepEqual(p.output_config, { effort: 'low' });
+  assert.equal('temperature' in p, false);
   assert.match(p.system, /valid JSON object/);
   assert.deepEqual(p.messages, [{ role: 'user', content: 'Idea text' }]);
 });
@@ -116,4 +118,25 @@ test('refusals and API errors become plain messages', async () => {
   assert.equal(err.status, 502);
   assert.ok(!JSON.stringify(err.body).includes('socket'));
   assert.ok(Anthropic.APIError);
+});
+
+test('older 4.6 models get the plain request with no thinking settings', async () => {
+  const { requestParams, settings } = await import('../netlify/lib/core.mjs');
+  process.env.ANTHROPIC_MODEL = 'claude-sonnet-4-6';
+  const p = requestParams(settings(), 'sys', 'hello', 900);
+  delete process.env.ANTHROPIC_MODEL;
+  assert.equal(p.model, 'claude-sonnet-4-6');
+  assert.equal(p.max_tokens, 900);
+  assert.equal(p.output_config, undefined);
+});
+
+test('answer text is read past thinking blocks, and a cut-off empty answer is an error', async () => {
+  const store = memoryStore();
+  const id = await begun(store);
+  const withThinking = stubClient({ stop_reason: 'end_turn', content: [{ type: 'thinking', thinking: '', signature: 's' }, { type: 'text', text: 'answer' }] });
+  const r = await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x' }, store, client: withThinking });
+  assert.equal(r.body.text, 'answer');
+  const cut = stubClient({ stop_reason: 'max_tokens', content: [{ type: 'thinking', thinking: '', signature: 's' }] });
+  const c = await handleClaude({ body: { analysisId: id, promptId: 'summary', user: 'x' }, store, client: cut });
+  assert.equal(c.status, 502);
 });

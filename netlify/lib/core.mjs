@@ -20,8 +20,25 @@ export const settings = () => ({
   dailyCallLimit: num('DAILY_CALL_LIMIT', 600),    // site-wide safety cap on Claude calls per day
   ipDailyAnalyses: num('IP_DAILY_ANALYSES', 6),    // analyses started per visitor IP per day
   sessionHours: num('SESSION_HOURS', 24),
-  model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6',
+  model: process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5',
+  effort: process.env.ANTHROPIC_EFFORT || 'low',      // how much newer models think before answering
+  thinkingRoom: num('THINKING_ROOM', 1000),           // extra tokens allowed for that thinking
 });
+
+// The 4.6 models answer straight away. Newer models (Haiku 5.5, Sonnet 5.5, ...) think first,
+// and that thinking counts towards max_tokens, so they get an effort level and extra room.
+const answersWithoutThinking = (model) => /-4-6$/.test(model);
+
+export function requestParams(s, system, user, answerTokens) {
+  const params = { model: s.model, system, messages: [{ role: 'user', content: user }] };
+  if (answersWithoutThinking(s.model)) {
+    params.max_tokens = answerTokens;
+  } else {
+    params.max_tokens = answerTokens + s.thinkingRoom;
+    params.output_config = { effort: s.effort };
+  }
+  return params;
+}
 
 const sha = (s) => createHash('sha256').update(s).digest('hex');
 const today = (now) => new Date(now).toISOString().slice(0, 10);
@@ -130,16 +147,16 @@ export async function handleClaude({ body, store, client = claudeClient(), now =
   const max_tokens = Math.min(Number.isFinite(requested) && requested > 0 ? requested : 900, s.maxTokensCap);
 
   try {
-    const response = await client.messages.create({
-      model: s.model,
-      max_tokens,
-      system,
-      messages: [{ role: 'user', content: user }],
-    });
+    const response = await client.messages.create(requestParams(s, system, user, max_tokens));
     if (response.stop_reason === 'refusal') {
       return reply(422, { error: 'The AI could not answer this one. Try rewording your description.' });
     }
+    // Read text blocks by type: newer models can return thinking blocks first.
     const text = response.content.filter((b) => b.type === 'text').map((b) => b.text).join('');
+    if (response.stop_reason === 'max_tokens') {
+      console.error('Claude answer cut off at max_tokens', s.model, max_tokens);
+      if (!text) return reply(502, { error: 'The answer was cut short. Please try again.' });
+    }
     return reply(200, { text, callsLeft: s.callsPerAnalysis - analysis.calls });
   } catch (err) {
     // Log the detail for you; show the visitor a plain message.

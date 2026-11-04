@@ -40,7 +40,9 @@ environment variable and used only by the server functions.
 
 | Name | Default | Meaning |
 |---|---|---|
-| `ANTHROPIC_MODEL` | `claude-sonnet-4-6` | Model used for every analyser request. |
+| `ANTHROPIC_MODEL` | `claude-haiku-5-5` | Model used for every analyser request (e.g. `claude-sonnet-5-5` for stronger, pricier answers). |
+| `ANTHROPIC_EFFORT` | `low` | How much newer models think before answering: `low`, `medium` or `high`. Higher costs more. |
+| `THINKING_ROOM` | `1000` | Extra tokens allowed for that thinking, on top of the answer. |
 | `FREE_ANALYSES` | `2` | Free analyses per email address. |
 | `CALLS_PER_ANALYSIS` | `40` | AI requests allowed within one analysis (a full run uses about 29). |
 | `MAX_TOKENS_CAP` | `1000` | Longest answer any single request can ask for. |
