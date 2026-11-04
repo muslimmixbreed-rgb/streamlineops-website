@@ -1,0 +1,45 @@
+<p class="lead">If jobs, orders or requests are tracked across emails, sticky notes and memory, a single Excel sheet can bring them together. Here's a simple tracker you can build in an afternoon.</p>
+
+  <h2>1. Decide what a "job" is</h2>
+  <p>It might be a customer order, a repair, a booking or an internal task. Keep to one kind of work per tracker at first.</p>
+
+  <h2>2. Set up your columns</h2>
+  <p>Start with only what you need. You can add more later.</p>
+  <div class="table-scroll">
+  <table class="simple">
+    <tr><th>Column</th><th>What goes in it</th></tr>
+    <tr><td>Job ID</td><td>A simple number: 1001, 1002…</td></tr>
+    <tr><td>Date received</td><td>When the job came in</td></tr>
+    <tr><td>Customer / requester</td><td>Who it's for</td></tr>
+    <tr><td>Description</td><td>A short summary</td></tr>
+    <tr><td>Owner</td><td>The one person responsible</td></tr>
+    <tr><td>Status</td><td>Chosen from a drop-down list</td></tr>
+    <tr><td>Due date</td><td>When it needs to be done</td></tr>
+    <tr><td>Days overdue</td><td>Worked out by a formula</td></tr>
+  </table>
+  </div>
+
+  <h2>3. Turn it into a table</h2>
+  <p>Click inside your headings and press <code>Ctrl + T</code> (on a Mac, <code>Cmd + T</code>). An Excel table gives you filter buttons, banded rows, and formulas that copy down automatically when you add a row.</p>
+
+  <h2>4. Add a status drop-down</h2>
+  <p>Select the Status column, then go to <strong>Data → Data Validation</strong>, choose <strong>List</strong>, and type something like <code>Not started,In progress,Waiting,Done</code>. A fixed list keeps everyone using the same words, which makes filtering reliable.</p>
+
+  <h2>5. Work out what's overdue</h2>
+  <p>In the Days overdue column, a formula like this shows how many days late an unfinished job is, and stays blank otherwise:</p>
+  <p><code>=IF(AND([@Status]&lt;&gt;"Done",[@[Due date]]&lt;TODAY()),TODAY()-[@[Due date]],"")</code></p>
+  <p>The <code>[@Column]</code> style is how Excel tables refer to a column in the same row. If your column names differ, change them to match.</p>
+
+  <h2>6. Make problems stand out</h2>
+  <p>Select the Days overdue column and use <strong>Home → Conditional Formatting → Highlight Cells Rules → Greater Than</strong> with a value of <code>0</code>. Overdue jobs now show up the moment you open the file.</p>
+
+  <h2>7. Agree how it will be used</h2>
+  <p>The spreadsheet is the easy part. The habit is what makes it work:</p>
+  <ul>
+    <li>Every new job goes on the tracker the same day.</li>
+    <li>Each job has one owner.</li>
+    <li>Status is updated when it changes, not at the end of the week.</li>
+    <li>You look at overdue jobs together for five minutes, once a week.</li>
+  </ul>
+
+  <div class="callout"><p><strong>Tip:</strong> store the file somewhere shared, such as OneDrive or SharePoint, so everyone works on one copy instead of emailing versions around.</p></div>
