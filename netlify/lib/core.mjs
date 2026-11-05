@@ -14,9 +14,9 @@ const num = (name, fallback) => {
 
 export const settings = () => ({
   freeAnalyses: num('FREE_ANALYSES', 2),          // analyses per email address
-  callsPerAnalysis: num('CALLS_PER_ANALYSIS', 5),  // one report per analysis, plus a few retries
-  maxTokensCap: num('MAX_TOKENS_CAP', 1500),       // longest answer the page may ask for
-  maxInputChars: num('MAX_INPUT_CHARS', 8000),     // longest text the page may send
+  callsPerAnalysis: num('CALLS_PER_ANALYSIS', 40), // 14 domain cards + follow-ups + summary is about 30
+  maxTokensCap: num('MAX_TOKENS_CAP', 1200),       // longest answer the page may ask for
+  maxInputChars: num('MAX_INPUT_CHARS', 12000),     // longest text the page may send
   dailyCallLimit: num('DAILY_CALL_LIMIT', 600),    // site-wide safety cap on Claude calls per day
   ipDailyAnalyses: num('IP_DAILY_ANALYSES', 6),    // analyses started per visitor IP per day
   sessionHours: num('SESSION_HOURS', 24),

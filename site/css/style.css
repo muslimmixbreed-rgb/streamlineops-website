@@ -350,3 +350,43 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .85em; 
   .panel { border: 0 !important; padding: 0 !important; }
   .hc-gaps li { break-inside: avoid; }
 }
+
+/* ---------- Business Analyser: stages and domain cards ---------- */
+.az-tabs { list-style: none; margin: 0 0 2.5rem; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; border-bottom: 1px solid var(--line); padding-bottom: 1rem; }
+.az-tabs button { display: inline-flex; align-items: center; gap: .5rem; background: none; border: 1px solid var(--line); padding: .5rem .85rem; font: 600 .9rem var(--font); color: var(--ink-2); cursor: pointer; }
+.az-tabs button:disabled { cursor: not-allowed; opacity: .45; }
+.az-tabs button:not(:disabled):hover { border-color: var(--ink); color: var(--ink); }
+.az-tabs .n { display: inline-grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: var(--mist); font-size: .78rem; }
+.az-tabs li.ok .n { background: var(--accent-ink); color: #fff; }
+.az-tabs li.on button { border-color: var(--night); background: var(--night); color: #fff; }
+.az-tabs li.on .n { background: var(--accent); color: var(--night); }
+.az-guide li { padding-top: .5rem; padding-bottom: .5rem; font-size: .97rem; }
+.az-desc { min-height: 16rem !important; }
+.az-hint { margin: .5rem 0 0; }
+.az-cards { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.az-card { border: 1px solid var(--line); border-left: 4px solid var(--line); background: #fff; padding: 1.25rem 1.4rem; }
+.az-card.locked { opacity: .55; }
+.az-card.done.good { border-left-color: var(--accent-ink); }
+.az-card.done.mid { border-left-color: #d08a00; }
+.az-card.done.low { border-left-color: #c2413a; }
+.az-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.az-card-head h3 { font-size: 1.25rem; margin: 0 0 .2rem; }
+.az-card-head p { margin: 0; max-width: 40rem; }
+.az-card-body { margin-top: .9rem; }
+.az-card-body > p { color: var(--ink-2); margin: 0 0 .6rem; }
+.az-card-body .actions { margin-top: .25rem; }
+.az-card .hc-svc { margin: .8rem 0 0; padding-top: .7rem; border-top: 1px solid var(--line); color: var(--ink); font-size: .95rem; }
+.az-card .hc-svc a { font-weight: 700; }
+.az-badge { flex: none; font-size: .78rem; font-weight: 700; padding: .3rem .6rem; white-space: nowrap; }
+.az-badge.good { background: #dff3ef; color: #075e55; }
+.az-badge.mid { background: #fdf0d5; color: #7a5200; }
+.az-badge.low { background: #fbe3e1; color: #8f2b25; }
+.az-question { background: var(--mist); padding: .8rem 1rem; border-left: 3px solid var(--accent); }
+.az-status { margin-top: .75rem; }
+.az-status:empty { display: none; }
+.az-mini { list-style: none; margin: .7rem 0 0; padding: 0; display: grid; gap: .2rem .9rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); font-size: .88rem; }
+.az-mini li { display: flex; justify-content: space-between; gap: .5rem; border-bottom: 1px dotted var(--line); padding: .25rem 0; color: var(--ink-2); }
+.az-mini li.good b { color: #075e55; }
+.az-mini li.mid b { color: #7a5200; }
+.az-mini li.low b { color: #8f2b25; }
+@media print { .az-tabs, .az-card .actions { display: none !important; } .az-card { break-inside: avoid; } }

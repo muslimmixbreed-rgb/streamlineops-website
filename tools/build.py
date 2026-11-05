@@ -219,13 +219,13 @@ PROMO = '''<section class="band accent-band">
     <div>
       <p class="kicker">Free tool</p>
       <h2>Find out where your operations are losing time</h2>
-      <p class="lede">The free StreamlineOps Business Analyser scores how your business runs today and shows your three biggest operational gaps and what they are costing you.</p>
+      <p class="lede">Describe your business and the free StreamlineOps Business Analyser works through the McKinsey 7S model and seven operational domains to show where the gaps are.</p>
       <div class="actions"><a class="button" href="{P}analyser.html">Start the free analysis</a></div>
     </div>
     <ul class="promo-list">
-      <li><span>01</span>Rate 20 statements about how you work</li>
-      <li><span>02</span>See a score for each area of the business</li>
-      <li><span>03</span>See your top three gaps and why they matter</li>
+      <li><span>01</span>Describe your business in your own words</li>
+      <li><span>02</span>Work through the 7S model and seven operational domains</li>
+      <li><span>03</span>See your top three priorities and why they matter</li>
     </ul>
   </div>
 </section>'''
@@ -400,9 +400,9 @@ page("about.html", "About | StreamlineOps",
 
 # ------------------------------------------------------------------ ANALYSER
 page("analyser.html", "Business Analyser | StreamlineOps",
-     "A free operations health check for small businesses: score your processes, tools, procedures and customer handling, and see your biggest gaps. Two free analyses.",
+     "A free business analyser for small businesses: describe your business and it works through the McKinsey 7S model and seven operational domains to find your biggest gaps. Two free analyses.",
      "Business Analyser", f'''
-{page_hero("The Business Analyser", "A free operations health check for businesses that are already trading. Rate 20 statements about how your business runs and get a score for each area plus your three biggest gaps and what they are likely costing you. About 5 minutes, free to use twice.", "Free tool", "Business Analyser")}
+{page_hero("The Business Analyser", "For businesses that are already trading. Describe your business in your own words, and the analyser works through the McKinsey 7S model and seven operational domains one by one to find where the gaps are. Free to use twice.", "Free tool", "Business Analyser")}
 <section class="band mist">
   <div class="wrap two-col wide-left">
     <div class="panel tool" id="analyser-gate">
@@ -427,9 +427,10 @@ page("analyser.html", "Business Analyser | StreamlineOps",
     <aside>
       <p class="kicker">What you get</p>
       <ul class="ticks">
-        <li>A score for processes, tools, procedures and customers</li>
-        <li>Your three biggest gaps, and why each one matters</li>
-        <li>What good looks like, and which service fits</li>
+        <li>Each of the McKinsey 7S elements assessed for your business</li>
+        <li>Seven operational domains: processes, people, tools, standards, measures, customers and capacity</li>
+        <li>What we found, why it matters and what good looks like, for each one</li>
+        <li>Your top three priorities, and which service fits</li>
         <li>Two free analyses, with no obligation</li>
       </ul>
       <p class="muted small">Your details are used to provide the analyser. Marketing emails are optional.</p>
@@ -512,9 +513,9 @@ for post in POSTS:
 </section>
 ''', "article")
 
-page("analyser/tool.html", "Operations health check | StreamlineOps",
-     "StreamlineOps Business Analyser: operations health check.", "Business Analyser", f'''
-{page_hero("Operations health check", "Answer honestly: the more accurate your answers, the more useful your report. Nothing is shared unless you choose to send it.", "Business Analyser", '<a href="{{P}}analyser.html">Business Analyser</a><span>/</span>Health check')}
+page("analyser/tool.html", "Business analysis | StreamlineOps",
+     "StreamlineOps Business Analyser.", "Business Analyser", f'''
+{page_hero("Business analysis", "Describe your business, then work through each domain in turn. The more specific you are, the more useful the analysis. Nothing is shared with StreamlineOps unless you choose to send it.", "Business Analyser", '<a href="{{P}}analyser.html">Business Analyser</a><span>/</span>Analysis')}
 <section class="band mist">
   <div class="wrap">
     <div class="panel hc-panel" id="hc-app"><noscript>This tool needs JavaScript switched on.</noscript></div>
@@ -522,7 +523,7 @@ page("analyser/tool.html", "Operations health check | StreamlineOps",
       <input type="hidden" name="form-name" value="analyser-results">
       <p hidden><label>Leave this empty: <input name="bot-field"></label></p>
       <input type="hidden" name="name"><input type="hidden" name="email"><input type="hidden" name="business">
-      <input type="hidden" name="profile"><input type="hidden" name="scores"><input type="hidden" name="gaps"><input type="hidden" name="frustration">
+      <input type="hidden" name="description"><input type="hidden" name="scores"><input type="hidden" name="ratings"><input type="hidden" name="gaps">
       <p class="kicker">Next step</p>
       <h2 style="font-size:1.7rem">Want to know how to close these gaps?</h2>
       <p class="muted">The right fix depends on how your business actually runs. Send your results to StreamlineOps and request a free, no-obligation chat about what would make the biggest difference for you.</p>
@@ -535,7 +536,7 @@ page("analyser/tool.html", "Operations health check | StreamlineOps",
     </form>
   </div>
 </section>
-''', scripts=("analyser-questions.js", "analyser.js"), noindex=True)
+''', scripts=("analyser-domains.js", "analyser.js"), noindex=True)
 
 page("thanks.html", "Message sent | StreamlineOps", "Thanks for getting in touch.", "",
      page_hero("Thanks, your message is on its way", 'You will get a personal reply. In the meantime, have a look at our <a href="/blog/">insights</a>.', "Message sent"))
